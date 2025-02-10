@@ -12,6 +12,45 @@
             margin: 0;
             padding: 0;
         }
+
+        .nav {
+
+            width: 100%;
+            height: 60px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border-bottom: 0.5px solid rgb(239, 239, 239);
+
+        }
+
+        .nav img {
+
+            margin-bottom: 8px;
+            height: 60px;
+        }
+
+        .nav a {
+
+            text-decoration: none   ;
+            margin: 0px 20px;
+            font-size: 16px;
+            font-weight:550;
+            color: #3f3f46;
+            border-radius: 5px;
+            padding: 12px 24px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav a:hover {
+            color: #3f3f46;
+            /* background-color: #f9fafb; */
+            border:0.2px solid rgba(0, 0, 0, 0.2); 
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.05); 
+           
+        }
+
         .container {
             /* position: absolute; */
             display: flex;
@@ -21,7 +60,7 @@
             width: 1179px;
             height: 330px;
             /* transform: translate(-50%, -50%); */
-            margin: 200px  auto 0px;
+            margin: 120px  auto 0px;
             background: rgb(252, 236, 239);
             padding: 40px;
             border-radius: 10px;
@@ -133,6 +172,19 @@
     </style>
 </head>
 <body>
+
+    <div class="nav">
+
+        <img src="logo.png" alt="">
+
+        <a href="">Video Downloader</a>
+        <a href="">Audio Downloader</a>
+        <a href="">Video Summary</a>
+        <a href="">Change Subtitles</a>
+
+
+    </div>
+
     <div class="container">
         <h1 class="ht">YouTube Video Downloader</h1>
         <p class="cp" >Download any public video from YouTube, transcribe it to text, extract or add subtitles!</p>
