@@ -129,6 +129,45 @@
 
         }
 
+        .progress-container {
+            width: 100%;
+            height: 35px;
+            position: relative;
+            background-color: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            display: none; /* Initially hidden */
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left : 0;
+            width: 0%;
+            height: 100%;
+            background-color: #b70202;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+            transition: width 0.2s;
+        }
+
+        .progress-text {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            color: black;
+            z-index: 1001;
+        }
+
         footer {
 
             height: 200px;
@@ -158,7 +197,13 @@
             <input type="text" id="audioURL" placeholder="Paste a YouTube video URL here">
             <button onclick="downloadAudio()">Download</button>
         </div>
-        <p id="audio-message"></p>
+
+
+        <div class="progress-container">   
+            <div class="progress-bar" id="progressBar"></div>
+            <div class="progress-text" id="progressText">Downloading... 0%</div>
+        </div>
+
         <p id="audio-error"></p>
         <a id="downloadAudioLink" style="display: none;" target="_blank">Download File</a>
     </div>
