@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fcf5f500;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav {
+            width: 100%;
+            height: 60px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border-bottom: 0.5px solid rgb(239, 239, 239);
+            position: fixed;
+            padding: 5px;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0px 5px 10px rgba(199, 198, 198, 0.3); 
+            background-color: #ffffff;
+        }
+
+        .nav img {
+
+            margin-bottom: 8px;
+            height: 60px;
+        }
+
+        .nav a {
+
+            text-decoration: none   ;
+            margin: 0px 20px;
+            font-size: 16px;
+            font-weight:550;
+            color: #3f3f46;
+            border-radius: 5px;
+            padding: 12px 24px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav a:hover {
+            color: #ef2200;
+            background-color: #fcecef;
+            /* border:0.2px solid rgba(0, 0, 0, 0.2); */ 
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.05); 
+           
+        }
+
+        .container {
+            /* position: absolute; */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 1179px;
+            height: 400px;
+            /* transform: translate(-50%, -50%); */
+            margin: 120px auto 0px;
+            background: rgb(252, 236, 239);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .ht {
+            color: #ef2b2b;
+            font-size: 48px;
+            margin-bottom: 0px;
+        }
+        p {
+            color: #555;
+            font-size: 20px;
+        }
+        .input-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 50px auto;
+            width: 812px;
+        }
+        input[type="text"] {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 8px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #ef2f2f;
+            color: white;
+            border: none;
+            padding: 10px 20px; 
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #b70202;
+        }
+        .footer-text {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #777;
+        }
+        .footer-text a {
+            color: #7e57c2;
+            text-decoration: none;
+        }
+
+        .cp {
+
+            width: 678px;
+            padding: 2%;
+            margin: auto;
+            font-size: 20px;
+
+        }
+
+        footer {
+
+            height: 200px;
+
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="">
+
+        <a href="/">Video Downloader</a>
+        <a href="">Audio Downloader</a>
+        <a href="">Video Summary</a>
+        <a href="">Change Subtitles</a>
+
+
+    </div>
+
+    <div class="container">
+        <h1 class="ht">YouTube Audio Downloader</h1>
+        <p class="cp" >Download any public audio of video from YouTube, transcribe it to text, extract or add subtitles!</p>
+        <div class="input-box">
+            <input type="text" id="audioURL" placeholder="Paste a YouTube video URL here">
+            <button onclick="downloadAudio()">Download</button>
+        </div>
+        <p id="audio-message"></p>
+        <p id="audio-error"></p>
+        <a id="downloadAudioLink" style="display: none;" target="_blank">Download File</a>
+    </div>
+    <footer >
+
+
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

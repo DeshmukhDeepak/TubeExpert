@@ -14,14 +14,19 @@
         }
 
         .nav {
-
             width: 100%;
             height: 60px;
             display: flex;
             flex-direction: row;
             align-items: center;
             border-bottom: 0.5px solid rgb(239, 239, 239);
-
+            position: fixed;
+            padding: 5px;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0px 5px 10px rgba(199, 198, 198, 0.3); 
+            background-color: #ffffff;
         }
 
         .nav img {
@@ -44,9 +49,9 @@
         }
 
         .nav a:hover {
-            color: #3f3f46;
-            /* background-color: #f9fafb; */
-            border:0.2px solid rgba(0, 0, 0, 0.2); 
+            color: #ef2200;
+            background-color: #fcecef;
+            /* border:0.2px solid rgba(0, 0, 0, 0.2); */ 
             box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.05); 
            
         }
@@ -58,9 +63,9 @@
             align-items: center;
             justify-content: center;
             width: 1179px;
-            height: 330px;
+            height: 400px;
             /* transform: translate(-50%, -50%); */
-            margin: 120px  auto 0px;
+            margin: 120px auto 0px;
             background: rgb(252, 236, 239);
             padding: 40px;
             border-radius: 10px;
@@ -175,10 +180,10 @@
 
     <div class="nav">
 
-        <img src="logo.png" alt="">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="">
 
         <a href="">Video Downloader</a>
-        <a href="">Audio Downloader</a>
+        <a href="/audio">Audio Downloader</a>
         <a href="">Video Summary</a>
         <a href="">Change Subtitles</a>
 
@@ -189,9 +194,12 @@
         <h1 class="ht">YouTube Video Downloader</h1>
         <p class="cp" >Download any public video from YouTube, transcribe it to text, extract or add subtitles!</p>
         <div class="input-box">
-            <input type="text" placeholder="Paste a YouTube video URL here">
-            <button>Download</button>
+            <input type="text" id="videoURL" placeholder="Paste a YouTube video URL here">
+            <button onclick="downloadVideo()">Download</button>
         </div>
+        <p id="video-message"></p>
+        <p id="video-error"></p>
+        <a id="downloadVideoLink" style="display: none;" target="_blank">Download File</a>
     </div>
 
     <div class="ytd">
@@ -201,14 +209,14 @@
         <div class="howto">
 
             <div class="one">
-                <img src="hyt1.webp" alt="" class="imgg">
+                <img src="{{ url_for('static', filename='images/hyt1.webp') }}" alt="" class="imgg">
 
                 <p>Copy and Paste the Youtube URL</p>
 
             </div>
 
             <div class="two">
-                <img src="hyt2.webp" alt="" class="imgg">
+                <img src="{{ url_for('static', filename='images/hyt2.webp') }}" alt="" class="imgg">
                 <p>Click Download</p>
             </div>
 
@@ -222,6 +230,8 @@
 
 
     </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 </body>
 </html>
