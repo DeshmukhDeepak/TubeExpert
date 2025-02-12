@@ -1,13 +1,36 @@
 function downloadVideo(){
+    let progress = 0;
+    let progressBar = document.getElementById("progressBar");
+    let progressText = document.getElementById("progressText");
+    let progressContainer = document.querySelector(".progress-container");
     let url = document.getElementById("videoURL").value;
     let format = "video";
+    
     
     if (!url) {
         document.getElementById("video-error").innerText = "Please enter a valid URL";
         return;
     }
+
+    // Show the progress bar
+    progressContainer.style.display = "block";
+
+    // Simulate progress update every 400ms
+    let interval = setInterval(() => {
+        if (progress < 90) { // Keep it below 90% until response
+            progress += 10;
+            progressBar.style.width = progress + "%";
+            progressText.textContent = "Downloading.." + progress + "%";
+
+            if (progress > 45) { // Change color after 50%
+                progressText.style.color = "white";
+            } else {
+                progressText.style.color = "black";
+            }
+
+        }
+    }, 400);
     
-    document.getElementById("video-message").innerText = "Downloading...";
     document.getElementById("video-error").innerText = "";
 
     fetch('/download', {
@@ -19,9 +42,14 @@ function downloadVideo(){
     .then(data => {
         if (data.error) {
             document.getElementById("video-error").innerText = data.error;
-            document.getElementById("video-message").innerText = "";
         } else {
-            document.getElementById("video-message").innerText = "Download complete!";
+            clearInterval(interval);  // Stop progress updates
+                    progressBar.style.width = "100%";
+                    progressText.textContent = "100%";
+                    setTimeout(() => {
+                        progressContainer.style.display = "none"; // Hide after completion
+                    }, 1000);
+
             let link = document.getElementById("downloadVideoLink");
             link.href = "/downloads/" + data.file;
             link.innerText = "Download " + format.toUpperCase();
@@ -34,6 +62,10 @@ function downloadVideo(){
     });
 }
 function downloadAudio(){
+    let progress = 0;
+    let progressBar = document.getElementById("progressBar");
+    let progressText = document.getElementById("progressText");
+    let progressContainer = document.querySelector(".progress-container");
     let url = document.getElementById("audioURL").value;
     let format = "audio";
     
@@ -41,8 +73,26 @@ function downloadAudio(){
         document.getElementById("audio-error").innerText = "Please enter a valid URL";
         return;
     }
+
+    // Show the progress bar
+    progressContainer.style.display = "block";
+
+    // Simulate progress update every 400ms
+    let interval = setInterval(() => {
+        if (progress < 90) { // Keep it below 90% until response
+            progress += 10;
+            progressBar.style.width = progress + "%";
+            progressText.textContent = "Downloading.." + progress + "%";
+
+            if (progress > 45) { // Change color after 50%
+                progressText.style.color = "white";
+            } else {
+                progressText.style.color = "black";
+            }
+
+        }
+    }, 400);
     
-    document.getElementById("audio-message").innerText = "Downloading...";
     document.getElementById("audio-error").innerText = "";
 
     fetch('/download', {
@@ -54,9 +104,14 @@ function downloadAudio(){
     .then(data => {
         if (data.error) {
             document.getElementById("audio-error").innerText = data.error;
-            document.getElementById("audio-message").innerText = "";
         } else {
-            document.getElementById("audio-message").innerText = "Download complete!";
+            clearInterval(interval);  // Stop progress updates
+                    progressBar.style.width = "100%";
+                    progressText.textContent = "100%";
+                    setTimeout(() => {
+                        progressContainer.style.display = "none"; // Hide after completion
+                    }, 1000);
+
             let link = document.getElementById("downloadAudioLink");
             link.href = "/downloads/" + data.file;
             link.innerText = "Download " + format.toUpperCase();
@@ -65,6 +120,5 @@ function downloadAudio(){
     })
     .catch(err => {
         document.getElementById("audio-error").innerText = "An error occurred!";
-        document.getElementById("audio-message").innerText = "";
     });
 }
