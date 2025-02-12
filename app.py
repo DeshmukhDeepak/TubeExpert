@@ -15,6 +15,10 @@ def index():
 def audio():
     return render_template('audio.html')
 
+@app.route('/summary')
+def summary():
+    return render_template('summary.html')
+
 @app.route('/download', methods=['POST'])
 def download_video():
     data = request.json
