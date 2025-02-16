@@ -90,7 +90,7 @@ def summarize_sub():
                 return jsonify({"error": "No subtitles found"}), 404
             
             subtitle_url = subtitles[0]['url']
-            response = requests.get(subtitle_url)  # ✅ Correctly using requests
+            response = requests.get(subtitle_url)  
             subtitle_text = response.text if response.status_code == 200 else "Failed to fetch subtitles"
 
         try:
