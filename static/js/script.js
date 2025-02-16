@@ -61,6 +61,9 @@ function downloadVideo(){
         document.getElementById("video-message").innerText = "";
     });
 }
+
+
+
 function downloadAudio(){
     let progress = 0;
     let progressBar = document.getElementById("progressBar");
@@ -120,5 +123,50 @@ function downloadAudio(){
     })
     .catch(err => {
         document.getElementById("audio-error").innerText = "An error occurred!";
+    });
+}
+
+function getSummary(){
+
+    let url = document.getElementById("videoURL").value;
+    let summaryContainer = document.getElementById("summaryContainer");
+    let summaryText = document.getElementById("summaryText");
+    let summary_errorr = document.getElementById("summary-error");
+
+    summaryText.innerText = "";
+    summary_errorr.innerText = "";
+    summary_errorr.style.display = "none";
+    summaryContainer.style.display = "none";
+
+
+    if (!url) {
+        summary_errorr.style.display = "block";
+        summary_errorr.innerText = "Please enter a valid URL";
+        return;
+    }
+
+    summaryContainer.style.display = "block";
+    summaryText.innerText = "Fetching subtitles and summarizing...";
+
+    fetch('/summarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url })
+    })
+
+    .then(function(response) {
+        return response.json();
+    })
+
+    .then(function(data) {
+        if (data.error) {
+            summaryText.innerText = "Error: " + data.error;
+        } else {
+            summaryText.innerText = data.summary;
+        }
+    })
+
+    .catch(function(err) {
+        summaryText.innerText = "An error occurred!";
     });
 }
