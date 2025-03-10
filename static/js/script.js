@@ -170,3 +170,66 @@ function getSummary(){
         summaryText.innerText = "An error occurred!";
     });
 }
+
+
+//Subtitle doownload part
+function downloadSubtitle() {
+    const url = document.getElementById("audioURL").value;
+    const language = document.getElementById("language").value;
+    const progressContainer = document.querySelector(".progress-container");
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+    const fileDisplay = document.getElementById("fileDisplay");
+    const subtitleLink = document.getElementById("subtitleLink");
+
+    if (!url) {
+        alert("Please enter a valid YouTube URL.");
+        return;
+    }
+
+    // Show the progress bar
+    progressContainer.style.display = "block";
+    progressBar.style.width = "0%";
+    progressText.textContent = "Loading... 0%";
+
+    // Simulate progress (replace with actual backend call)
+    let progress = 0;
+    const interval = setInterval(() => {
+        if (progress < 90) {
+            progress += 10;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `Loading... ${progress}%`;
+        }
+    }, 400);
+
+    // Send request to backend
+    fetch('/generate_subtitles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ video_url: url, target_languages: [language] })
+    })
+    .then(response => response.json())
+    .then(data => {
+        clearInterval(interval); // Stop progress updates
+        if (data.error) {
+            progressText.textContent = "Error: " + data.error;
+        } else {
+            progressBar.style.width = "100%";
+            progressText.textContent = "Completed!";
+            setTimeout(() => {
+                progressContainer.style.display = "none"; // Hide after completion
+            }, 1000);
+
+            // Display the subtitle file
+            fileDisplay.style.display = "block";
+            subtitleLink.href = `data:text/plain;charset=utf-8,${encodeURIComponent(data.translations[language])}`;
+            subtitleLink.download = `subtitles_${language}.txt`;
+            subtitleLink.innerText = `Download Subtitles (${language.toUpperCase()})`;
+        }
+    })
+    .catch(err => {
+        clearInterval(interval);
+        progressText.textContent = "An error occurred!";
+        console.error(err);
+    });
+}
