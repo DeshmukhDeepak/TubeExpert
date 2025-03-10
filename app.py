@@ -1,19 +1,24 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 import yt_dlp
 import os
-import requests 
+import requests
 import google.generativeai as genai
-
+import speech_recognition as sr
+from googletrans import Translator
 
 app = Flask(__name__)
 
-
-
+# Configuration
 DOWNLOAD_FOLDER = "downloads"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
+# Configure Google Generative AI
 genai.configure(api_key="AIzaSyD98IaF8bMI6Kg10h1ELKAST3rPFpYC_6I")
 
+# Initialize Translator
+translator = Translator()
+
+# Routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -25,6 +30,10 @@ def audio():
 @app.route('/summary')
 def summary():
     return render_template('summary.html')
+
+@app.route('/subtitle')
+def subtitle():
+    return render_template('subtitle.html')
 
 @app.route('/download', methods=['POST'])
 def download_video():
@@ -74,7 +83,7 @@ def summarize_sub():
 
     if not url:
         return jsonify({"error": "URL is required"}), 400
-    
+
     ydl_opts = {
         'writesubtitles': True,
         'subtitleslangs': ['en'],
@@ -88,9 +97,9 @@ def summarize_sub():
             subtitles = info.get('subtitles', {}).get('en', [])
             if not subtitles:
                 return jsonify({"error": "No subtitles found"}), 404
-            
+
             subtitle_url = subtitles[0]['url']
-            response = requests.get(subtitle_url)  
+            response = requests.get(subtitle_url)
             subtitle_text = response.text if response.status_code == 200 else "Failed to fetch subtitles"
 
         try:
@@ -104,6 +113,80 @@ def summarize_sub():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
+@app.route('/generate_subtitles', methods=['POST'])
+def generate_subtitles():
+    data = request.json
+    video_url = data.get('video_url')
+    target_languages = data.get('target_languages', ['en'])  # Default to English
+
+    if not video_url:
+        return jsonify({"error": "video_url is required"}), 400
+
+    # Generate subtitles
+    subtitles = generate_subtitles_for_video(video_url, target_languages)
+
+    return jsonify(subtitles)
+
+# Helper Functions for Subtitle Generation
+def download_youtube_video(video_url):
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'outtmpl': os.path.join(DOWNLOAD_FOLDER, 'temp_audio.%(ext)s'),
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'wav',
+            'preferredquality': '192',
+        }],
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(video_url, download=True)
+        audio_path = ydl.prepare_filename(info).replace('.webm', '.wav')
+    return audio_path
+
+def transcribe_audio(audio_path):
+    recognizer = sr.Recognizer()
+    with sr.AudioFile(audio_path) as source:
+        audio = recognizer.record(source)
+    try:
+        text = recognizer.recognize_google(audio)
+    except sr.UnknownValueError:
+        text = "Could not understand audio"
+    except sr.RequestError:
+        text = "API unavailable"
+    return text
+
+def translate_text(text, target_languages):
+    translations = {}
+    for lang in target_languages:
+        try:
+            translated = translator.translate(text, dest=lang)
+            translations[lang] = translated.text
+        except Exception as e:
+            translations[lang] = f"Translation failed for {lang}: {str(e)}"
+    return translations
+
+def generate_subtitles_for_video(video_url, target_languages):
+    # Step 1: Download the YouTube video as audio
+    audio_path = download_youtube_video(video_url)
+
+    # Step 2: Transcribe the audio to text
+    transcribed_text = transcribe_audio(audio_path)
+
+    # Step 3: Translate the text into target languages
+    translations = translate_text(transcribed_text, target_languages)
+
+    # Step 4: Clean up the downloaded audio file
+    if os.path.exists(audio_path):
+        os.remove(audio_path)
+
+    # Step 5: Return the results
+    subtitles = {
+        'original_text': transcribed_text,
+        'translations': translations
+    }
+    return subtitles
+
+# Run the Flask app
 if __name__ == '__main__':
     app.run(debug=True)
