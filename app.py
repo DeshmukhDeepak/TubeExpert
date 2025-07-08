@@ -8,17 +8,17 @@ from googletrans import Translator
 
 app = Flask(__name__)
 
-# Configuration
+x
 DOWNLOAD_FOLDER = "downloads"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-# Configure Google Generative AI
-genai.configure(api_key="AIzaSyD98IaF8bMI6Kg10h1ELKAST3rPFpYC_6I")
 
-# Initialize Translator
+genai.configure(api_key="xxxx")
+
+
 translator = Translator()
 
-# Routes
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -39,7 +39,7 @@ def subtitle():
 def download_video():
     data = request.json
     url = data.get('url')
-    format_type = data.get('format', 'video')  # Default to video
+    format_type = data.get('format', 'video')
 
     if not url:
         return jsonify({"error": "URL is required"}), 400
@@ -118,17 +118,17 @@ def summarize_sub():
 def generate_subtitles():
     data = request.json
     video_url = data.get('video_url')
-    target_languages = data.get('target_languages', ['en'])  # Default to English
+    target_languages = data.get('target_languages', ['en'])  
 
     if not video_url:
         return jsonify({"error": "video_url is required"}), 400
 
-    # Generate subtitles
+  
     subtitles = generate_subtitles_for_video(video_url, target_languages)
 
     return jsonify(subtitles)
 
-# Helper Functions for Subtitle Generation
+
 def download_youtube_video(video_url):
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -167,26 +167,26 @@ def translate_text(text, target_languages):
     return translations
 
 def generate_subtitles_for_video(video_url, target_languages):
-    # Step 1: Download the YouTube video as audio
+
     audio_path = download_youtube_video(video_url)
 
-    # Step 2: Transcribe the audio to text
+
     transcribed_text = transcribe_audio(audio_path)
 
-    # Step 3: Translate the text into target languages
+
     translations = translate_text(transcribed_text, target_languages)
 
-    # Step 4: Clean up the downloaded audio file
+
     if os.path.exists(audio_path):
         os.remove(audio_path)
 
-    # Step 5: Return the results
+
     subtitles = {
         'original_text': transcribed_text,
         'translations': translations
     }
     return subtitles
 
-# Run the Flask app
+
 if __name__ == '__main__':
     app.run(debug=True)
