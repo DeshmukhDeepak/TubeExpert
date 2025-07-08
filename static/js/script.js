@@ -12,12 +12,12 @@ function downloadVideo(){
         return;
     }
 
-    // Show the progress bar
+
     progressContainer.style.display = "block";
 
-    // Simulate progress update every 400ms
+
     let interval = setInterval(() => {
-        if (progress < 90) { // Keep it below 90% until response
+        if (progress < 90) { 
             progress += 10;
             progressBar.style.width = progress + "%";
             progressText.textContent = "Downloading.." + progress + "%";
@@ -43,11 +43,11 @@ function downloadVideo(){
         if (data.error) {
             document.getElementById("video-error").innerText = data.error;
         } else {
-            clearInterval(interval);  // Stop progress updates
+            clearInterval(interval);  
                     progressBar.style.width = "100%";
                     progressText.textContent = "100%";
                     setTimeout(() => {
-                        progressContainer.style.display = "none"; // Hide after completion
+                        progressContainer.style.display = "none"; 
                     }, 1000);
 
             let link = document.getElementById("downloadVideoLink");
@@ -77,17 +77,17 @@ function downloadAudio(){
         return;
     }
 
-    // Show the progress bar
+
     progressContainer.style.display = "block";
 
     // Simulate progress update every 400ms
     let interval = setInterval(() => {
-        if (progress < 90) { // Keep it below 90% until response
+        if (progress < 90) {
             progress += 10;
             progressBar.style.width = progress + "%";
             progressText.textContent = "Downloading.." + progress + "%";
 
-            if (progress > 45) { // Change color after 50%
+            if (progress > 45) { 
                 progressText.style.color = "white";
             } else {
                 progressText.style.color = "black";
@@ -108,11 +108,11 @@ function downloadAudio(){
         if (data.error) {
             document.getElementById("audio-error").innerText = data.error;
         } else {
-            clearInterval(interval);  // Stop progress updates
+            clearInterval(interval);  
                     progressBar.style.width = "100%";
                     progressText.textContent = "100%";
                     setTimeout(() => {
-                        progressContainer.style.display = "none"; // Hide after completion
+                        progressContainer.style.display = "none"; 
                     }, 1000);
 
             let link = document.getElementById("downloadAudioLink");
@@ -172,7 +172,7 @@ function getSummary(){
 }
 
 
-//Subtitle doownload part
+
 function downloadSubtitle() {
     const url = document.getElementById("audioURL").value;
     const language = document.getElementById("language").value;
@@ -187,12 +187,11 @@ function downloadSubtitle() {
         return;
     }
 
-    // Show the progress bar
+
     progressContainer.style.display = "block";
     progressBar.style.width = "0%";
     progressText.textContent = "Loading... 0%";
 
-    // Simulate progress (replace with actual backend call)
     let progress = 0;
     const interval = setInterval(() => {
         if (progress < 90) {
@@ -202,7 +201,7 @@ function downloadSubtitle() {
         }
     }, 400);
 
-    // Send request to backend
+  
     fetch('/generate_subtitles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -210,17 +209,17 @@ function downloadSubtitle() {
     })
     .then(response => response.json())
     .then(data => {
-        clearInterval(interval); // Stop progress updates
+        clearInterval(interval); 
         if (data.error) {
             progressText.textContent = "Error: " + data.error;
         } else {
             progressBar.style.width = "100%";
             progressText.textContent = "Completed!";
             setTimeout(() => {
-                progressContainer.style.display = "none"; // Hide after completion
+                progressContainer.style.display = "none"; 
             }, 1000);
 
-            // Display the subtitle file
+         
             fileDisplay.style.display = "block";
             subtitleLink.href = `data:text/plain;charset=utf-8,${encodeURIComponent(data.translations[language])}`;
             subtitleLink.download = `subtitles_${language}.txt`;
